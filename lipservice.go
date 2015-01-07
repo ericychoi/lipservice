@@ -72,6 +72,6 @@ func respond(conn net.Conn, response string) {
 		}
 		readStr := string(buf[:n])
 		log.Printf("READ:%s", string(readStr))
-		conn.Write([]byte(response))
+		conn.Write([]byte(response + "\n"))
 	}
 }
