@@ -5,8 +5,10 @@ A simple TCP server that returns a preset response for a given port.
 
 Takes a json from STDIN.
 
+null means hang.
+
 ~~~shell
-% echo '{ "51234": "HELLO", "55556": "HI" }' | json | go run lipservice.go
+% echo '{ "51234": "HELLO", "55556": "HI", "52321": null }' | json | go run lipservice.go
 2014/12/11 18:06:48 starting service at 51234...
 response: HELLO...
 2014/12/11 18:06:48 starting service at 55556...

@@ -35,8 +35,12 @@ func main() {
 			fmt.Println("%s not a valid port!\n", k)
 			continue
 		}
-		response := v.(string)
-		startService(port, response)
+		if v == nil {
+			startHangingService(port)
+		} else {
+			response := v.(string)
+			startService(port, response)
+		}
 	}
 
 	shutdownCh := make(chan os.Signal)
@@ -58,6 +62,25 @@ func startService(port int, response string) {
 				log.Fatalf("couldn't listen accept the request in port %d", port)
 			}
 			go respond(conn, response)
+		}
+	}()
+}
+
+// accepts a connection, but hangs
+func startHangingService(port int) {
+	log.Printf("starting a hanging service at %d...\n", port)
+	listener, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
+	if err != nil {
+		log.Fatalf("couldn't listen to port %d", port)
+	}
+
+	go func() {
+		for {
+			_, err := listener.Accept()
+			if err != nil {
+				log.Fatalf("couldn't listen accept the request in port %d", port)
+			}
+			// do nothing
 		}
 	}()
 }
